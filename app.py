@@ -2,17 +2,22 @@
 import gradio as gr
 import requests
 
-def call_backend(name):
-    url = "https://gradio-backend.onrender.com"
-    response = requests.post(url, json={"name": name})
-    return response.json().get("message", "Error connecting to backend")
+# Live backend URL
+BACKEND_URL = "https://gradio-backend.onrender.com/process"
 
-iface = gr.Interface(
-    fn=call_backend,
-    inputs=gr.Textbox(label="Enter your name"),
-    outputs=gr.Textbox(label="Backend Response"),
-    title="Hello Vorithm 🌐",
-    description="This Gradio app connects to a FastAPI backend!"
-)
+def greet(name):
+    try:
+        response = requests.post(BACKEND_URL, json={"name": name})
+        return response.json().get("message")
+    except:
+        return "Backend not reachable 😞"
 
-iface.launch()
+with gr.Blocks() as demo:
+    gr.Markdown("## Hello Vorithm 👋")
+    name_input = gr.Textbox(label="Enter your name")
+    output = gr.Textbox(label="Message from Backend")
+    submit = gr.Button("Say Hello")
+    submit.click(fn=greet, inputs=name_input, outputs=output)
+
+# Run Gradio on port 10001 (Render needs 0.0.0.0)
+demo.launch(server_name="0.0.0.0", server_port=10001)
