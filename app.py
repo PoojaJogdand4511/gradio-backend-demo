@@ -3,7 +3,7 @@ import gradio as gr
 import requests
 
 def call_backend(name):
-    url = "http://127.0.0.1:8000/process"
+    url = "https://gradio-backend.onrender.com"
     response = requests.post(url, json={"name": name})
     return response.json().get("message", "Error connecting to backend")
 

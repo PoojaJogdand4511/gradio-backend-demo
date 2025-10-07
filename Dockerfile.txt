@@ -1,0 +1,18 @@
+# Use official Python base image
+FROM python:3.11-slim
+
+# Set working directory
+WORKDIR /app
+
+# Copy project files
+COPY . /app
+
+# Install dependencies
+RUN pip install --upgrade pip
+RUN pip install -r requirements.txt
+
+# Expose the port that Gradio will run on
+EXPOSE 10000
+
+# Start the Gradio backend
+CMD ["python", "backend.py"]
